@@ -22,11 +22,12 @@ public class Triangle {
                     "  gl_FragColor = vColor;" +
                     "}";
 
+    private int vPMatrixHandle;
+
     private final int mProgram;
 
     private FloatBuffer vertexBuffer;
 
-    private int vPMatrixHandle;
 
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
@@ -99,7 +100,7 @@ public class Triangle {
         GLES20.glUniform4fv(colorHandle, 1, color, 0);
 
         // Draw the triangle
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
+        //GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
 
         // get handle to shape's transformation matrix
         vPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");

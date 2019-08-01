@@ -30,22 +30,22 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     }
     public void onSurfaceCreated(GL10 unused, EGLConfig config){
         //GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        //mSphere = new Sphere(mContext);
-        mTriangle = new Triangle();
-        translateMatrix[0]=1;
+        mSphere = new Sphere(mContext);
+        //mTriangle = new Triangle();
+        translateMatrix[0]=4;
         translateMatrix[1]=0;
         translateMatrix[2]=0;
         translateMatrix[3]=0;
 
         translateMatrix[4]=0;
-        translateMatrix[5]=1;
+        translateMatrix[5]=4;
         translateMatrix[6]=0;
         translateMatrix[7]=0;
 
         translateMatrix[8]=0;
         translateMatrix[9]=0;
-        translateMatrix[10]=7;
-        translateMatrix[11]=0;
+        translateMatrix[10]=1;
+        translateMatrix[11]=-10;
 
         translateMatrix[12]=0;
         translateMatrix[13]=0;
@@ -70,8 +70,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
        // Matrix.translateM(translateMatrix, 0, 0, 0, 1);
        Matrix.multiplyMM(mVPMatrix, 0, vPMatrix, 0, translateMatrix, 0);
         // Draw shape
-        //mSphere.draw(vPMatrix);
-        mTriangle.draw(mVPMatrix);
+        mSphere.draw(mVPMatrix);
+        //mTriangle.draw(mVPMatrix);
     }
 
     public void onSurfaceChanged(GL10 unused, int width, int height){

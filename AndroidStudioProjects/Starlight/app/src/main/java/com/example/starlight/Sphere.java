@@ -34,6 +34,8 @@ public class Sphere {
                     "  gl_FragColor = vec4(1, 0.5, 0, 1.0);" +
                     "}";
 
+    private int vPMatrixHandle;
+
     private int program;
     private List<String> verticesList;
     private List<String> facesList;
@@ -125,7 +127,7 @@ public class Sphere {
 
     }
 
-    public void draw() {
+    public void draw(float[] mvpMatrix) {
         GLES20.glUseProgram(program);
         // Drawing code goes here
         positionHandle = GLES20.glGetAttribLocation(program, "vPosition");
@@ -160,7 +162,18 @@ public class Sphere {
         GLES20.glDrawElements(GLES20.GL_TRIANGLES,
               facesList.size() * 3, GLES20.GL_UNSIGNED_SHORT, facesBuffer);
 
+        // get handle to shape's transformation matrix
+        vPMatrixHandle = GLES20.glGetUniformLocation(program, "uMVPMatrix");
+
+        // Pass the projection and view transformation to the shader
+        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0);
+
+        // Draw the triangle
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
+
+        // Disable vertex array
         GLES20.glDisableVertexAttribArray(positionHandle);
+
     }
 
 
