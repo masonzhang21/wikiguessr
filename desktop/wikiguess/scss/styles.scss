@@ -1,0 +1,46 @@
+
+
+body{
+    background-color: whitesmoke;
+    font-family: 'Courier New', Courier, monospace;
+
+}
+
+
+.title{
+    color: black;
+    font-size: 100px;
+}
+
+.subtitle{
+    font-size: 30px;
+    
+}
+
+h1{
+    font-size: 70%;
+    font-weight: 500;
+}
+
+p{
+    font-size: 120%
+}
+.line{
+    border-top: 5px solid;
+    width: 500px;
+    float: left;
+}
+
+.btn-xl {
+    padding: 10px 20px;
+    font-size: 20px;
+    border-radius: 10px;
+    width:100%;   
+
+}
+
+@include media-breakpoint-up(sm) {
+    .some-class {
+      display: block;
+    }
+  }
