@@ -1,0 +1,126 @@
+body{
+    background-color: whitesmoke;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+
+.title{
+    color: black;
+    font-size: 100px;
+}
+
+.subtitle{
+    font-size: 30px;
+    
+}
+
+h1{
+    font-size: 70%;
+    font-weight: 500;
+}
+
+p{
+    font-size: 120%
+}
+.line{
+    border-top: 5px solid;
+    width: 500px;
+    float: left;
+}
+
+.btn-xl {
+    padding: 10px 20px;
+    font-size: 20px;
+    border-radius: 10px;
+    width:100%;   
+
+}
+
+.categories{
+    font-size: 40px;
+}
+
+.guess-container{
+     font-size: 0; 
+} 
+.guess-input{
+    background-color: whitesmoke;
+    border: 0;
+    font-size: 100px;
+    color: black;
+    margin: 0;
+    padding: 0;
+  
+}
+.input-button{
+    font-size: 50px;
+    border: 0;
+    background-color: whitesmoke;
+    outline: 0 !important;
+    color: gray;
+
+}
+.guess-line{
+    border-top: 1px solid black;
+    margin-left: -30px;
+}
+
+.guess-caption{
+    font-size: 12px;
+}
+
+input:focus{
+    border: 0px;
+    outline: none;
+}
+
+.hidden-text{
+    
+    background-color: black;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.article{
+    color: black;
+}
+/*remove article class?*/
+
+.normal-text{
+    background-color: whitesmoke;
+    transition: background-color 1s;
+}
+
+@media (max-width:992px)/*smaller than lg*/{
+
+.center{
+    text-align: center;
+}
+
+.title{
+    font-size: 15vw;
+}
+
+.responsive-category{
+    margin-top: 5vh;
+    padding-top: 5vh;
+    background-color: white;
+}
+
+}
+
+@media (min-width:992px)/* larger than lg */{
+.top-margin{
+    padding-top: 5%;
+    padding-bottom: 5%;
+}
+
+.responsive-category{
+    margin-top: -5vh;
+}
+}
