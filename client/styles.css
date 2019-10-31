@@ -1,6 +1,25 @@
+
+.hide{
+    visibility: hidden
+}
+
+
 body{
     background-color: whitesmoke;
     font-family: 'Courier New', Courier, monospace;
+}
+
+pre {
+    display: inline;
+    margin: 0; 
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 100%;
+    color: black;
+}
+
+h4{
+    font-size: 110%;
+    font-weight: bold;
 }
 
 
@@ -20,10 +39,9 @@ h1{
 }
 
 p{
-    font-size: 120%
+    font-size: 110%;
 }
 .line{
-    border-top: 5px solid;
     width: 500px;
     float: left;
 }
@@ -36,36 +54,62 @@ p{
 
 }
 
+#input-form{
+    height: 9vh;
+}
+
 .categories{
     font-size: 40px;
 }
 
-.guess-container{
-     font-size: 0; 
-} 
+.section-line{
+    margin-bottom: 3vh;
+    margin-top: 0;
+    border: 1px solid lightgray;
+}
+
+.subsection{
+    font-weight: bold;
+    font-size: 22px;
+    margin-top: 3.5vh;
+}
+
+
+.section-title{
+    margin-top: 8vh;
+}
 .guess-input{
     background-color: whitesmoke;
     border: 0;
-    font-size: 100px;
     color: black;
     margin: 0;
     padding: 0;
   
 }
-.input-button{
-    font-size: 50px;
+#input-button{
     border: 0;
     background-color: whitesmoke;
     outline: 0 !important;
     color: gray;
 
 }
-.guess-line{
+#next-article{
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+#next-button{
+    border: 2px solid black;
+    font-size: 1.3vw;
+    display: none;
+
+}
+#guess-line{
     border-top: 1px solid black;
     margin-left: -30px;
 }
 
-.guess-caption{
+#guess-caption{
     font-size: 12px;
 }
 
@@ -86,6 +130,14 @@ input:focus{
     user-select: none;
 }
 
+#toc{
+    border: 2px solid gray;
+    padding: 3vh 0 3vh 0;
+    width: 75%;
+    align-content: center;
+    margin-left: auto;
+    margin-right: auto;
+}
 .article{
     color: black;
 }
@@ -94,6 +146,101 @@ input:focus{
 .normal-text{
     background-color: whitesmoke;
     transition: background-color 1s;
+}
+
+.subsection{
+    background-color: whitesmoke;
+}
+.test-a{
+    margin: 10px 10px 10px 10px;
+}
+.section-button{
+    padding: 12px 24px;
+    font-size: 1.5vw;
+    margin: 10px 2px 10px 10px;
+}
+
+#match{
+    font-size: 4vw;
+    text-align: right;
+    margin: 0;
+    visibility: hidden;
+}
+.correct{
+    color: green;
+}
+
+.incorrect{
+    color: red;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+}
+.lv2-line{
+    width: 70%;
+    border: 1px solid gray;
+    margin-left: -10px;
+}
+
+
+.fs-8{
+    font-size: 8vw;
+}
+.fs-7{
+    font-size: 7vw;
+}
+.fs-6{
+    font-size: 6vw;
+}
+.fs-5{
+    font-size: 5vw;
+}
+.fs-4{
+    font-size: 4vw;
+}
+.fs-3{
+    font-size: 3vw;
+}
+.fs-2{
+    font-size: 2vw;
+}
+.fs-1{
+    font-size: 1vw;
+}
+.small-centered-line{
+    border: 0px ;
+    height: 5px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+    width: 50%;
+    align-content: center;
+}
+
+
+
+[count="3"] {
+    border: green 5px solid;
+    background: whitesmoke
+
+}
+
+[count="2"] {
+    border: gold 5px solid;
+    background: whitesmoke
+
+
+}
+
+[count="1"] {
+    border: orange 5px solid;
+    background: whitesmoke
+
+
+}
+
+[count="0"] {
+    border: red 5px solid;
+    background: whitesmoke
+
+
 }
 
 @media (max-width:992px)/*smaller than lg*/{

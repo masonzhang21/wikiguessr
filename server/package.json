@@ -2,10 +2,11 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "dev": "nodemon index.js"
+    "start": "nodemon app.js",
+    "dev": "nodemon app.js",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -13,10 +14,12 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "jsdom": "^15.2.0",
     "morgan": "^1.9.1",
-    "node-fetch": "^2.6.0"
-  },
-  "devDependencies": {
+    "natural": "^0.6.3",
+    "node-fetch": "^2.6.0",
+    "jest": "^24.9.0",
     "nodemon": "^1.19.1"
   }
+
 }

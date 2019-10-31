@@ -1,4 +1,7 @@
-const API_URL = 'http://localhost:5000/random';
+const API_URL = 'https://wikiguess.appspot.com/random';
+
+var master;
+
 
 //json that's sent to backend
 var info = {
@@ -16,163 +19,258 @@ fetch(API_URL, {
     }
 }).then(res => res.json())
     .then(function (res) {
-        // res is object containing article title and article html!
-        articleBlueprint = createArticleBlueprint(res.articleTitle, res.html);
+        // res is object containing article title, first sentence, blueprint, etc.
+        populatePage(res);
     }).catch("oops");
 
 
 
-// Parses HTML and creates a Hashmap 
-function createArticleBlueprint(articleTitle, html){
-    var firstSentence = "This is a sentence.";
-    var firstParagraph = "My first paragraph is very long";
-    var article = {
-        title: articleTitle, 
-        firstSentence: firstSentence, 
-        blueprint: blueprint,
-        html: html
-    };
-    //return JSON.stringify(article);
-    //var styleCode = [];
-    //var articleBlueprint =;
-    // var tableCodeList = [];
-    // var tocCode;
-    // var infoboxCode;
-    // var imageList = [];
-    // var linksList = [];
-    /*var content = {
-        title: "Intro", 
-        content: "Food is any substance[1] consumed to provide nutritional support for an organism.",
-         sub1: {
-            title: "Food sources",
-            content: "Most food has its origin in plants.",
-            sub1: {
-                title: "Plants",
-                content: "Many plants and plant parts..."
-            },
-            sub2: {
-                title: "Animals",
-                content: "Animals are used as food either"
+function populatePage(master) {
+    $(document).ready(function () {
+        $(".hide").removeClass("hide")
+    });
+    //makes the backend package global
+    this.master = master;
+    createInputForm(master.title);
+    insertIntroParagraph(master.blueprint.content[0], master.title);
+    insertSectionButtons(Object.keys(master.blueprint));
+
+
+}
+/* 
+<div class="btn-group" role="group"">
+  <div class="btn-group" role="group">
+    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" >
+      Dropdown
+    </button>
+    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+      <a class="dropdown-item" href="#">Dropdown link</a>
+      <a class="dropdown-item" href="#">Dropdown link</a>
+    </div>
+  </div>
+
+</div>
+            </div>*/
+
+function insertSectionButtons(sections) {
+    for (var i = 0; i < sections.length; i++) {
+        var section = sections[i];
+        //outer button-group
+        var container = document.createElement("div")
+        setAttributes(container, {
+            class: "btn-group",
+            role: "group",
+            section: section
+        })
+        //outer button
+        var button = document.createElement("button");
+        button.innerText = section;
+        setAttributes(button, {
+            type: "button",
+            class: "btn btn-primary btn-lg section-button",
+            id: "sb" + i.toString(),
+            //onclick: "displaySection(this)"
+        });
+
+        var subSections = Object.keys(master.blueprint[section]);
+        if (section == "content") {
+            if (Object.keys(section).length > 1) {
+                //only appends if there's more intro than the first paragraph
+                button.innerText = "intro";
+                $(button).attr("onclick", "displayManager(this)");
+                $(container).append(button);
+                $("#section-buttons").append(container);
             }
-        
-         },
-         sub2: {
-            title: "classifications and types of food",
-            content: "",
-
-         }
-        
-    }*/
-    var blueprint = {
-        content: {}
-    }
-
-    var blueprintLocation = 0;
-    var counter = 0;
-    var dummyDOM = document.createElement('template');
-    dummyDOM.innerHTML = html;    
-    currentElement = dummyDOM.content.firstElementChild.firstElementChild;
-    console.log(currentElement);
-    while (currentElement.nextElementSibling != null){
-
-        switch(currentElement.tagName.toLowerCase()){
-
-            case "p":
-                if(currentElement.classList.length == 0 && currentElement.querySelector("#coordinates") == null){
-                    var p = document.createElement("p");
-                    p.innerHTML = currentElement.innerText;
-                    addToBlueprint(p);
-                }
-                break;
-            case "ul":
-                //need to clean entire list, placeholder for now
-                addToBlueprint(currentElement);
-            case "h2":
-                headerName = currentElement.innerText;
-                blueprint[headerName] = {
-                    content: {}
-                };
-                blueprintLocation = 1;
-                counter = 0;
-                break;
-            case "h3":
-                subheaderName = currentElement.innerText;
-                headerName = Object.keys(blueprint)[Object.keys(blueprint).length - 1];
-                blueprint[headerName][subheaderName] = {
-                    content: {}
-                };
-                blueprintLocation = 2;
-                counter = 0;
-                break;
-            case "h4":
-                subsubheaderName = currentElement.innerText;
-                headerName = Object.keys(blueprint)[Object.keys(blueprint).length - 1];
-                subheaderName = Object.keys(blueprint[headerName])[(Object.keys(blueprint[headerName]).length) - 1];
-                blueprint[headerName][subheaderName][subsubheaderName] = {
-                    content: {}
-                };
-                blueprintLocation = 3;
-                counter = 0;
-                break;
-            default:
-            
         }
-        currentElement = currentElement.nextElementSibling;
-    }
-       
-    function addToBlueprint(content){
-        switch(blueprintLocation){
-            case 0:
-                //intro text
-                blueprint.content[counter] = content;
-                counter++;
-                break;
-            case 1:
-                //header text (h2)
-                headerName = Object.keys(blueprint)[Object.keys(blueprint).length - 1];
-                blueprint[headerName].content[counter] = content;
-                counter++;
-                break;
-            case 2:
-                //subheader text (h3)
-                headerName = Object.keys(blueprint)[Object.keys(blueprint).length - 1];
-                subheaderName = Object.keys(blueprint[headerName])[(Object.keys(blueprint[headerName]).length) - 1];
-                console.log(Object.keys(blueprint[headerName]))
-                console.log((Object.keys(blueprint[headerName]).length) - 1)
 
-                console.log(headerName + " " + subheaderName)
-                blueprint[headerName][subheaderName].content[counter] = content;
-                counter++;
-                break;
-            case 3:
-                headerName = Object.keys(blueprint)[Object.keys(blueprint).length - 1];
-                subheaderName = Object.keys(blueprint[headerName])[(Object.keys(blueprint[headerName]).length) - 1];
-                subsubheaderName = Object.keys(blueprint[headerName][subheaderName])[(Object.keys(blueprint[headerName][subheaderName]).length) - 1];
-                blueprint[headerName][subheaderName][subsubheaderName].content[counter] = content;
-                counter++;
-                break;
+        else if (subSections.length == 1) {
+            //if current section has no subsections, append button to container and add container to html
+            $(button).attr("onclick", "displayManager(this)");
+            $(container).append(button);
+            $("#section-buttons").append(container);
+
+        }
+        else if (subSections.length != 1) {
+            //if current section has more subsections, make nested button-group
+            //make section button drop-down
+            button.classList.add('dropdown-toggle');
+            $(button).attr("data-toggle", "dropdown");
+            //make div that holds subsections
+            var dropdown = document.createElement("div");
+            setAttributes(dropdown, {
+                class: "dropdown-menu",
+            });
+
+            //if section has some content
+            subsectionCont = master.blueprint[section]["content"];
+            if (Object.keys(subsectionCont).length > 0){
+                var subSection = document.createElement('button');
+                subSection.innerText = "overview";
+                setAttributes(subSection, {
+                    class: "dropdown-item subsection-button",
+                    id: "ssb" + i.toString() + "0",
+                    onclick: "displayManager(this)"
+                    //section: section
+
+                })
+                $(dropdown).append(subSection);
+            }
+            for (var j = 1; j < subSections.length; j++) {
+                //make subsection button
+                var subSection = document.createElement('button');
+                subSection.innerText = subSections[j];
+                setAttributes(subSection, {
+                    class: "dropdown-item subsection-button",
+                    id: "ssb" + i.toString() + j.toString(),
+                    //bss: button subsection
+                    onclick: "displayManager(this)"
+                    //section: section
+
+                })
+                $(dropdown).append(subSection);
+            }
+
+            var subcontainer = container;
+            $(subcontainer).append(button);
+            $(subcontainer).append(dropdown);
+            $(container).append(subcontainer);
+            $("#section-buttons").append(container);
         }
     }
-
-    console.log(JSON.stringify(blueprint, null, 4));
-}
-//title, first sentence, first paragraph, full body of article, css, censored version
-
-function populatePage(res){
-    createInputFields(JSON.parse(res).title);
-
 }
 
-function createInputFields(title){
+/**
+ * Loads first paragraph into page, unhidden
+ * @param  {String} introString Paragraph element with all <p> tags and entire first intro paragraph
+ * @param  {String} articleTitle Title of article
+ */
+function insertIntroParagraph(introString, articleTitle) {
+    //firstParagraph = htmlToElement(introString).innerText;
+    firstParagraph = introString;
+    censoredFirstParagraph = titleRemover(firstParagraph, articleTitle);
+    document.getElementById("first-hint").innerHTML = censoredFirstParagraph;
+}
+
+/**
+ * Not used
+ * @param  {String} str The long string
+ */
+function insertHiddenText(master) {
+    for (var i = 0; i < Object.keys(master.blueprint.content).length; i++) {
+        var paragraphString = master.blueprint.content[i];
+        var paragraph = htmlToElement(paragraphString).innerText;
+        var censoredParagraph = titleRemover(paragraph, master.title);
+        var censoredParagraphEle = document.createElement("p");
+        censoredParagraphEle.innerHTML = censoredParagraph;
+        if (i == 0)
+            document.getElementById("first-hint").innerHTML = censoredParagraph;
+        else {
+            setAttributes(censoredParagraphEle, {
+                class: "hidden-text second-hint",
+                onclick: "apparateText()"
+            })
+            //var parentEle = document.createElement("p");
+            //parentEle.appendChild(censoredParagraphEle);
+            document.getElementById("second-hint").appendChild(censoredParagraphEle);
+        }
+
+
+    }
+}
+
+/**
+ * Replaces all instances of each word of title in str with underlines
+ * @param  {String} str The long string
+ * @param  {String} title The string to be tokenized, and each token removed from str
+ * @return {String}     The output string with all instances all words in title replaced by underlines
+ */
+function titleRemover(str, title) {
+    var titleWords = title.split(" ");
+    var paragraph = str;
+    for (var i = 0; i < titleWords.length; i++) {
+        var keyword = titleWords[i];
+        var escapedKeyword = keyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        //initialize underscores to half the underscores in the keyword
+        var underscores = " ".repeat(Math.round(keyword.length / 2));
+        //index of word in title with underscore
+        var wordNum = i + 1;
+        underscores = "<pre><u>" + underscores + wordNum + underscores + "</u></pre>";
+        var regex = RegExp(escapedKeyword, "gi");
+        paragraph = paragraph.replace(regex, underscores);
+    }
+    return paragraph;
+}
+
+function createInputForm(title) {
     console.log(title);
+    var container = document.getElementById("input-container");
+    flag = true;
+
+
+
     for (let i = 0; i < title.length; i++) {
         var currentChar = title.charAt(i);
-        if (currentChar == "a"){
+        var charField = document.createElement("input");
+        charField = setAttributes(charField, {
+            class: "guess-input",
+            type: "text",
+            size: "1"
+        });
 
+        if (currentChar.match(/^[0-9a-zA-Z]+$/)) {
+            charField = setAttributes(charField, {
+                placeholder: "_",
+                maxlength: "1"
+            })
+            if (flag) {
+                charField.autofocus = true;
+                flag = false;
+            }
         }
+        else {
+            charField.setAttribute("value", currentChar);
+            charField.readOnly = true;
+        }
+        container.appendChild(charField);
     }
-    //convert words: remove accent marks, ignore case, etc
-    //if not(word or number) then fill it in, else create input box
-    
 
+    //sets font size based on title length
+    var l = title.length;
+    var fontSize;
+    switch (true) {
+        case l <= 5:
+            fontSize = "fs-6";
+            break;
+        case l > 6 && l <= 10:
+            fontSize = "fs-5";
+            break;
+        case l > 10 && l <= 15:
+            fontSize = "fs-4";
+            break;
+        case l > 15 && l <= 31:
+            fontSize = "fs-3";
+            break;
+        case l > 31:
+            fontSize = "fs-2";
+            break;
+        default:
+            break;
+    }
+    $('#input-form').addClass(fontSize);
 }
+
+function setAttributes(el, attrs) {
+    for (var key in attrs) {
+        el.setAttribute(key, attrs[key]);
+    }
+    return el;
+}
+
+function htmlToElement(html) {
+    var template = document.createElement('template');
+    html = html.trim(); // Never return a text node of whitespace as the result
+    template.innerHTML = html;
+    return template.content.firstChild;
+}
+
+
