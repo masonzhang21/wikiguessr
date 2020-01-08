@@ -2,272 +2,181 @@
 .hide{
     visibility: hidden
 }
+.fs12{
+    font-size: 12px;
+}
+.gray{
+    color: #636363;
+}
+.overflow{
+    overflow-x: auto;
+}
 
 
-body{
+html, body{
+    color: black;
     background-color: whitesmoke;
     font-family: 'Courier New', Courier, monospace;
+    overflow-x: hidden;
 }
 
 pre {
     display: inline;
     margin: 0; 
     font-family: 'Courier New', Courier, monospace;
-    font-size: 100%;
-    color: black;
+}
+table, th, td{
+    text-align: center;
+    border: 1px solid black;
+    padding: 5px;
 }
 
-h4{
-    font-size: 110%;
+
+
+/*Top bar*/
+#input-form{
+    position: absolute;
+    font-size: 2em;
+    bottom: 0;
+}
+#top-container{
+    white-space: nowrap;
+    height: 8.5vh;
+}
+#match{
+    font-size: 3em;
+    text-align: center;
+    visibility: hidden;
+    display: flex;
+    align-items: flex-end;
+}
+#input-button{
+    border: 0;
+    background-color: whitesmoke;
+    outline: 0;
+    margin-left: 5px;
+}
+#next-article{
+    padding: 0;
+    display: flex;
+    margin-top: 10px;
+    align-items: center;
+}
+#hint-box{
+    width: 1.8em;
+    height: 1.8em;
+    font-size: 1.8em;
+    background: whitesmoke
+}
+#next-button{
+    border: 2px solid black;
+    font-size: 0.9em;
+    display: none;
+}
+#guess-line{
+    border-top: 1px solid black;
+    margin: 0 0 0 -30px;
+}
+.guess-input{
+    background-color: whitesmoke;
+    border: 0;
+}
+input:focus{
+    border: 0px;
+    outline: none;
+}
+.correct{
+    color: green;
+}
+.incorrect{
+    color: red;
+    font-family: Verdana, Geneva, Tahoma, sans-serif ;
     font-weight: bold;
 }
-
-
-.title{
-    color: black;
-    font-size: 100px;
+.container{
+    max-width: 100%;
 }
 
-.subtitle{
-    font-size: 30px;
-    
-}
 
-h1{
-    font-size: 70%;
-    font-weight: 500;
+/*toc*/
+.toc-line{
+    border: 0px;
+    height: 4px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.562), rgba(0, 0, 0, 0));
+    width: 80%;
+    align-content: center;
 }
-
-p{
-    font-size: 110%;
-}
-.line{
-    width: 500px;
-    float: left;
-}
-
-.btn-xl {
-    padding: 10px 20px;
+.section-button{
+    padding: 12px 24px;
     font-size: 20px;
-    border-radius: 10px;
-    width:100%;   
-
+    margin: 10px 2px 10px 10px;
+}
+.clicked{
+    background: #636363;
+    border: 0;
 }
 
-#input-form{
-    height: 9vh;
+
+/*loading*/
+#loading{
+    font-size: 150%;
+}
+#dots{
+    letter-spacing: 0.2em;
 }
 
-.categories{
-    font-size: 40px;
-}
 
+/*section content*/
+.section-title{
+    margin-top: 8vh;
+}
 .section-line{
     margin-bottom: 3vh;
-    margin-top: 0;
     border: 1px solid lightgray;
 }
-
 .subsection{
     font-weight: bold;
     font-size: 22px;
     margin-top: 3.5vh;
 }
-
-
-.section-title{
-    margin-top: 8vh;
-}
-.guess-input{
-    background-color: whitesmoke;
-    border: 0;
-    color: black;
-    margin: 0;
-    padding: 0;
-  
-}
-#input-button{
-    border: 0;
-    background-color: whitesmoke;
-    outline: 0 !important;
-    color: gray;
-
-}
-#next-article{
-    display: flex;
-    align-items: center;
-    align-content: center;
-}
-#next-button{
-    border: 2px solid black;
-    font-size: 1.3vw;
-    display: none;
-
-}
-#guess-line{
-    border-top: 1px solid black;
-    margin-left: -30px;
-}
-
-#guess-caption{
-    font-size: 12px;
-}
-
-input:focus{
-    border: 0px;
-    outline: none;
-}
-
-.hidden-text{
-    
-    background-color: black;
-    cursor: pointer;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-#toc{
-    border: 2px solid gray;
-    padding: 3vh 0 3vh 0;
-    width: 75%;
-    align-content: center;
-    margin-left: auto;
-    margin-right: auto;
-}
-.article{
-    color: black;
-}
-/*remove article class?*/
-
-.normal-text{
-    background-color: whitesmoke;
-    transition: background-color 1s;
-}
-
-.subsection{
-    background-color: whitesmoke;
-}
-.test-a{
-    margin: 10px 10px 10px 10px;
-}
-.section-button{
-    padding: 12px 24px;
-    font-size: 1.5vw;
-    margin: 10px 2px 10px 10px;
-}
-
-#match{
-    font-size: 4vw;
-    text-align: right;
-    margin: 0;
-    visibility: hidden;
-}
-.correct{
-    color: green;
-}
-
-.incorrect{
-    color: red;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+h4{
     font-weight: bold;
-}
-.lv2-line{
-    width: 70%;
-    border: 1px solid gray;
-    margin-left: -10px;
+    font-size: 100%;
+    margin-top: 1.5vh;
 }
 
 
-.fs-8{
-    font-size: 8vw;
-}
-.fs-7{
-    font-size: 7vw;
-}
-.fs-6{
-    font-size: 6vw;
-}
-.fs-5{
-    font-size: 5vw;
-}
-.fs-4{
-    font-size: 4vw;
-}
-.fs-3{
-    font-size: 3vw;
-}
-.fs-2{
-    font-size: 2vw;
-}
-.fs-1{
-    font-size: 1vw;
-}
-.small-centered-line{
-    border: 0px ;
-    height: 5px;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-    width: 50%;
-    align-content: center;
-}
-
-
-
+/*hint box*/
 [count="3"] {
-    border: green 5px solid;
-    background: whitesmoke
-
+    border: green 4px solid;
 }
-
 [count="2"] {
-    border: gold 5px solid;
-    background: whitesmoke
-
-
+    border: gold 4px solid;
 }
-
 [count="1"] {
-    border: orange 5px solid;
-    background: whitesmoke
-
-
+    border: orange 4px solid;
 }
-
 [count="0"] {
-    border: red 5px solid;
-    background: whitesmoke
-
-
+    border: red 4px solid;
 }
 
-@media (max-width:992px)/*smaller than lg*/{
 
-.center{
-    text-align: center;
-}
 
-.title{
-    font-size: 15vw;
-}
 
-.responsive-category{
-    margin-top: 5vh;
-    padding-top: 5vh;
-    background-color: white;
-}
+@media (max-width:500px){
+    /*adjusts top bar*/
+    #match{
+        display: none;
+        padding: 0
+    }
 
-}
+    #next-article{
+       display: none;
+       padding: 0
+    }
 
-@media (min-width:992px)/* larger than lg */{
-.top-margin{
-    padding-top: 5%;
-    padding-bottom: 5%;
+    #top-container{
+        padding: 0
+    }
 }
 
-.responsive-category{
-    margin-top: -5vh;
-}
-}

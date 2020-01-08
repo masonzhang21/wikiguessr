@@ -1,252 +1,239 @@
 
-var express = require('express');
-var cors = require('cors');
-var natural = require('natural');
+const express = require('express');
+const cors = require('cors');
 const fetch = require("node-fetch");
 const jsdom = require("jsdom");
+const MongoClient = require('mongodb').MongoClient;
+
 const { JSDOM } = jsdom;
-var app = express(); //create express app
+const app = express();
 app.use(cors());
 app.use(express.json());
 
-var error = "";
-
+const error = "Error";
 const PORT = process.env.PORT || 5000;
 
-app.get('/', function (req, res) {
-    res
-    .status(200)
-    .send('Hello, world!')
-    .end();
-});
-//instead of post, do something with regex to get url and find appropriate category from that?
-app.post('/random', (req, res) => {
-    //console.log(req.body);
-    var article = getRandomArticle();
+app.get('/', ((req, res) => res.json("All systems online!")));
+app.get('/article', ((req, res) => res.json("Pathways Activated!")));
+
+app.post('/article', async function (req, res) {
+    let category = req.body.category.replace(".html", "").replace("/", "");
+    let articleTitle;
+    if (category == "random")
+        articleTitle = await getRandomArticleTitle();
+    else
+        articleTitle = await articleChooser(category);
+    let article = getArticle(articleTitle);
     article.then(r => res.json(r));
 });
 
 app.listen(PORT, function () {
-    console.log('Listening on port $(PORT)');
+    console.log('Listening to ${PORT}');
 });
 
-async function getRandomArticle(){
-    var articleTitle = await getRandomArticleTitle()
-    return getArticle(articleTitle);
+function articleChooser(category) {
+    return new Promise((resolve, reject) => {
+        const url = "mongodb+srv://masonzhang21:Zmas3.14@wikiguessr-qhfmm.gcp.mongodb.net/test?retryWrites=true&w=majority";
+        const client = new MongoClient(url, { useNewUrlParser: false });
+
+        client.connect(function (err) {
+            if (err) reject(err);
+            const db = client.db("Wikiguesr");
+            let cursor = db.collection('Categories').find({ category_name: category })
+            cursor.next(function (err, doc) {
+                if (err) reject(err);
+                let articles = Object.keys(doc);
+                articles.splice(0, 2);
+                let chosenArticle = Math.floor(Math.random() * articles.length);
+                resolve(articles[chosenArticle]);
+            });
+            client.close();
+        });
+    })
 }
-//returns article in json format
+
 function getRandomArticleTitle() {
-    var RANDOM_URL = 'https://en.wikipedia.org/api/rest_v1/page/random/title';
-    var articleTitle = fetch(RANDOM_URL, {
+    const RANDOM_URL = 'https://en.wikipedia.org/api/rest_v1/page/random/title';
+    let articleTitle = fetch(RANDOM_URL, {
         method: 'GET',
         headers: {
             'content-type': 'application/json'
         }
     }).then(res => res.json())
-        .then(function (res) {
-            return res.items[0].title;
-        }).catch(console.log(error));
+        .then(res => res.items[0].title)
+        .catch(console.log(error));
     return articleTitle;
 }
 
-
-
 async function getArticle(articleTitle) {
-    //var articleTitle = "United_States";
-    //var articleTitle = await getRandomArticleTitle();
-    //console.log(articleTitle)
-    var API_URL = 'https://www.wikipedia.org/w/api.php?action=parse&page=' + encodeURIComponent(articleTitle) + '&format=json';
-    //var usa = "https://www.wikipedia.org/w/api.php?action=parse&page=United_States&format=json";
-    var article = fetch(API_URL, {
+    let API_URL = 'https://www.wikipedia.org/w/api.php?action=parse&page=' + encodeURIComponent(articleTitle) + '&format=json';
+    let article = fetch(API_URL, {
         method: 'GET',
         headers: {
             'content-type': 'application/json'
         }
     }).then(res => res.json())
         .then(function (res) {
-            var html = res.parse.text["\*"];
-            var blueprint = createArticleBlueprint(html);
-            //var firstParagraph = blueprint.content[0].textContent;
-            //var firstSentence = getFirstSentence(firstParagraph);
-            //printBlueprint(blueprint);
+            let html = res.parse.text["\*"];
+            let blueprint = createArticleBlueprint(html);
             return {
                 title: articleTitle.replace(/_/g, " "),
-                //firstSentence: firstSentence,
-                blueprint: blueprint,
-                //linkList: linkList
-                //imageList: imgList
-                
-                html: html
+                blueprint: blueprint
             }
         }).catch(console.log(error));
     return article;
 }
 
-//TO-DO: Make this work somewhat reliably with RegEx
-function getFirstSentence(paragraph) {
-    var tokenizer = new natural.SentenceTokenizer();
-    var sentenceList = tokenizer.tokenize(paragraph);
-    //console.log(sentenceList);
-    return sentenceList[0];
-}
+/* BLUEPRINT FORMAT:
 
-function createArticleBlueprint(html) {
-    /* BLUEPRINT FORMAT:
+1. a unit is an object containing a content object and more unit objects
+2. a content object contains paragraphs
+3. blueprint is a unit
 
-    {
+{
+    content: {
+        0: <p> text </p>,
+        1: <p> text </p>,
+        2: <p> text </p>
+    },
+
+    Etymology: {
         content: {
-            0: <p> text </p>,
-            1: <p> text </p>,
-            2: <p> text </p>
+            0: <p> text </p>
+            ...
+        }
+    },
+
+    Demographics: {
+        content: {
         },
 
-        Etymology: {
-            content: {
-                0: <p> text </p>
-                ...
-            }
-        },
+        Population: {
+            content: {0: text, ..., n : text}
 
-        Demographics: {
-            content: {
-
-            },
-
-            Population: {
+            Major population areas: {
                 content: {0: text, ..., n : text}
-
-                Major population areas: {
-                    content: {0: text, ..., n : text}
-                }
-        
-            }
-
-            Language: {
-                content: {0: text, ..., n : text}
-            }
-
-            Religion: {
-                content: {0: text, ..., n : text}
-            }
-
-            Family structure: {
-                content: {0: text, ..., n : text}
-            }
+            } 
         }
     }
+}*/
 
+function createArticleBlueprint(html) {
 
-    */
-    /*TO-DO: ADD:
-     var tableCodeList = [];
-     var tocCode;
-     var infoboxCode;
-     var imageList = [];
-     var linksList = [];
-   */
-
-    var blueprint = {
+    let blueprint = {
         content: {}
     }
 
     //tracks which hierarchial level we're currently on
-    var blueprintLocation = 0;
-    //tracks the number of paragraphs currently in the object we're on.
-    var counter = 0;
+    let blueprintLocation = 0;
+    //tracks the number of paragraphs in the object we're currently on.
+    let counter = 0;
 
     //creates the dummy dom we use to traverse the html
-    var dom = new JSDOM(html);
-    var dummyDOM = dom.window.document.getElementsByTagName("p")[0];
+    let dom = new JSDOM(html);
+    const firstElement = dom.window.document.querySelectorAll(".mw-parser-output > p")[0];
 
     //first element of code 
-    currentElement = dummyDOM;
+    let currentElement = firstElement;
     while (currentElement.nextElementSibling != null) {
         switch (currentElement.tagName.toLowerCase()) {
-            case "p":
-                //there might be more 'exceptions' (when first classless <p> </p> is not first paragraph of intro), add to second part of if statement.
+            case "p": {
+                //'exceptions' when classless <p> is not a paragraph are added to if statement.
                 if (currentElement.classList.length == 0 && currentElement.querySelector("#coordinates") == null) {
-                    //var p = document.createElement("p");
-                    //TO-DO: set innerHTML to filtered version, remove [1] reference annotations, [edit]s, keep certain tags (eg superscript)
-                    //p.innerHTML = currentElement.textContent;
-                    var p = breakTags(currentElement);
+                    let p = breakTags(currentElement);
                     addToBlueprint(p);
                 }
                 break;
-            case "ul":
-                var ul = breakTags(currentElement);
+            }
+            case "table": {
+                if (currentElement.classList.contains("wikitable"))
+                    addToBlueprint("<table>" + breakTags(currentElement) + "</table>");
+                break;
+            }
+            case "ul": {
+                let ul = breakTags(currentElement);
                 addToBlueprint(ul);
                 break;
-            case "h2":
-                headerName = breakTags(currentElement);
+            }
+            case "h2": {
+                let headerName = breakTags(currentElement);
                 blueprint[headerName] = {
                     content: {}
                 };
+
                 blueprintLocation = 1;
                 counter = 0;
                 break;
-            case "h3":
-                subheaderName = breakTags(currentElement);
-                headerName = Object.keys(blueprint)[Object.keys(blueprint).length - 1];
+            }
+            case "h3": {
+                let subheaderName = breakTags(currentElement);
+                let headerName = Object.keys(blueprint)[Object.keys(blueprint).length - 1];
                 blueprint[headerName][subheaderName] = {
                     content: {}
                 };
+
                 blueprintLocation = 2;
                 counter = 0;
                 break;
-            case "h4":
-                subsubheaderName = breakTags(currentElement);
-                headerName = Object.keys(blueprint)[Object.keys(blueprint).length - 1];
-                subheaderName = Object.keys(blueprint[headerName])[(Object.keys(blueprint[headerName]).length) - 1];
+            }
+            case "h4": {
+                let subsubheaderName = breakTags(currentElement);
+                let headerName = Object.keys(blueprint)[Object.keys(blueprint).length - 1];
+                let subheaderName = Object.keys(blueprint[headerName])[(Object.keys(blueprint[headerName]).length) - 1];
                 blueprint[headerName][subheaderName][subsubheaderName] = {
                     content: {}
                 };
                 blueprintLocation = 3;
                 counter = 0;
                 break;
+            }
             default:
-
         }
         currentElement = currentElement.nextElementSibling;
     }
 
     function addToBlueprint(content) {
-        //var content = element.outerHTML;
         switch (blueprintLocation) {
-            case 0:
+            case 0: {
                 //intro text
                 blueprint.content[counter] = content;
                 counter++;
                 break;
-            case 1:
+            }
+            case 1: {
                 //header text (h2)
-                headerName = Object.keys(blueprint)[Object.keys(blueprint).length - 1];
+                let headerName = Object.keys(blueprint)[Object.keys(blueprint).length - 1];
                 blueprint[headerName].content[counter] = content;
                 counter++;
+            }
                 break;
-            case 2:
+            case 2: {
                 //subheader text (h3)
-                headerName = Object.keys(blueprint)[Object.keys(blueprint).length - 1];
-                subheaderName = Object.keys(blueprint[headerName])[(Object.keys(blueprint[headerName]).length) - 1];
+                let headerName = Object.keys(blueprint)[Object.keys(blueprint).length - 1];
+                let subheaderName = Object.keys(blueprint[headerName])[(Object.keys(blueprint[headerName]).length) - 1];
                 blueprint[headerName][subheaderName].content[counter] = content;
                 counter++;
                 break;
-            case 3:
-                headerName = Object.keys(blueprint)[Object.keys(blueprint).length - 1];
-                subheaderName = Object.keys(blueprint[headerName])[(Object.keys(blueprint[headerName]).length) - 1];
-                subsubheaderName = Object.keys(blueprint[headerName][subheaderName])[(Object.keys(blueprint[headerName][subheaderName]).length) - 1];
+            }
+            case 3: {
+                //subsubheader text (h4)
+                let headerName = Object.keys(blueprint)[Object.keys(blueprint).length - 1];
+                let subheaderName = Object.keys(blueprint[headerName])[(Object.keys(blueprint[headerName]).length) - 1];
+                let subsubheaderName = Object.keys(blueprint[headerName][subheaderName])[(Object.keys(blueprint[headerName][subheaderName]).length) - 1];
                 blueprint[headerName][subheaderName][subsubheaderName].content[counter] = content;
                 counter++;
                 break;
+            }
         }
     }
     return filterSections(blueprint);
 }
 
-function filterSections(blueprint){
-    var sections = Object.keys(blueprint);
-    var banlist = ["See also", "Notes", "Further reading", "External links", "References", "Sources"]
-    for (var i = 0; i < sections.length; i++){
-        if (banlist.includes(sections[i])){
+function filterSections(blueprint) {
+    const sections = Object.keys(blueprint);
+    const banlist = ["see also", "notes", "further reading", "external links", "references", "sources", "bibliography", "notes and references"]
+    for (let i = 0; i < sections.length; i++) {
+        if (banlist.includes(sections[i].toLowerCase())) {
             delete blueprint[sections[i]];
         }
     }
@@ -255,51 +242,45 @@ function filterSections(blueprint){
 /**
  * "Breaks" certain html tags while leaving others intact
  * @param  {Element} ele The element 
- * @return {String}     The output string containing certain desirable tags (superscript) while removing others (links, citations)
+ * @return {String}     The output string containing text and certain desirable tags (superscript) while removing others (links, citations)
  */
-function breakTags(ele){
-    var htmlString = "";
+function breakTags(ele) {
+    let htmlString = "";
 
-    var nodes = ele.childNodes;
-    for (var i = 0; i < nodes.length; i++){
-        if(nodes[i].nodeType == 3){
+    let nodes = ele.childNodes;
+    for (let i = 0; i < nodes.length; i++) {
+        if (nodes[i].nodeType == 3) {
             htmlString += nodes[i].textContent;
         }
-        else if (nodes[i].nodeType == 1){
+        else if (nodes[i].nodeType == 1) {
             //always break these elements
-            var elementsToBreak = ["A", "B", "U", "I", "SPAN"];
-            var elementsToKeep = ["UL", "LI"];
-            var tag = nodes[i].tagName;
-            if(tag == "SPAN" && nodes[i].classList.contains("mw-editsection") ||
-                (tag == "SUP" && nodes[i].classList.length != 0)){
+            const elementsToBreak = ["A", "B", "U", "I", "SPAN", "SMALL"];
+            let tag = nodes[i].tagName;
+            if (tag == "SPAN" && nodes[i].classList.contains("mw-editsection") ||
+                (tag == "SUP" && nodes[i].classList.length != 0)) {
                 //these are destroyed
             }
-            else if(elementsToBreak.includes(tag.toUpperCase())){
+            else if (elementsToBreak.includes(tag.toUpperCase())) {
                 //the textContent of these are extracted
                 htmlString += nodes[i].textContent;
             }
-            else if (elementsToKeep.includes(tag.toUpperCase()) ||
-            (tag == "SUP" && (nodes[i].classList.length == 0)) ||
-            true){
+            else {
                 //the tags of these are preserved
-                htmlString += ("<"+tag+">" +breakTags(nodes[i])+ "</"+tag+">");
+                htmlString += ("<" + tag + ">" + breakTags(nodes[i]) + "</" + tag + ">");
             }
         }
-    }
-
-    if (ele.tagName == "UL"){
-        htmlString = "<ul>" + htmlString + "</ul>";
     }
     return htmlString;
 }
 
+
 function printBlueprint(blueprint) {
 
-    for (var i = 0; i < Object.keys(blueprint.content).length; i++) {
+    for (let i = 0; i < Object.keys(blueprint.content).length; i++) {
         console.log(blueprint.content[i]);
     }
 
-    for (var i = 1; i < Object.keys(blueprint).length; i++) {
+    for (let i = 1; i < Object.keys(blueprint).length; i++) {
         currentHeader = Object.keys(blueprint)[i];
         console.log(currentHeader);
         printBlueprint(blueprint[currentHeader]);

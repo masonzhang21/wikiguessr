@@ -1,216 +1,69 @@
-const API_URL = 'https://wikiguess.appspot.com/random';
+let blueprint;
+let title;
+let futureArticle;
 
-var master;
+(function () {
+    let ellipses = setInterval(function () {
+        let text = $('#dots').text();
+        if ($("#loading").css("display") == "none")
+            clearInterval(ellipses);
+        else if (text.length < 3) 
+            $('#dots').text(text + ".");
+        else 
+            $('#dots').text("");
+    }, 200);
 
+    fetchArticle().then(package => populatePage(package));
+})();
 
-//json that's sent to backend
-var info = {
-    'category': 'random',
-    'difficulty': 'hard',
-    'other': 4
-}
-
-//post request
-fetch(API_URL, {
-    method: 'POST',
-    body: JSON.stringify(info),
-    headers: {
-        'content-type': 'application/json'
-    }
-}).then(res => res.json())
-    .then(function (res) {
-        // res is object containing article title, first sentence, blueprint, etc.
-        populatePage(res);
-    }).catch("oops");
-
-
-
-function populatePage(master) {
-    $(document).ready(function () {
-        $(".hide").removeClass("hide")
-    });
-    //makes the backend package global
-    this.master = master;
-    createInputForm(master.title);
-    insertIntroParagraph(master.blueprint.content[0], master.title);
-    insertSectionButtons(Object.keys(master.blueprint));
-
-
-}
-/* 
-<div class="btn-group" role="group"">
-  <div class="btn-group" role="group">
-    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" >
-      Dropdown
-    </button>
-    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-      <a class="dropdown-item" href="#">Dropdown link</a>
-      <a class="dropdown-item" href="#">Dropdown link</a>
-    </div>
-  </div>
-
-</div>
-            </div>*/
-
-function insertSectionButtons(sections) {
-    for (var i = 0; i < sections.length; i++) {
-        var section = sections[i];
-        //outer button-group
-        var container = document.createElement("div")
-        setAttributes(container, {
-            class: "btn-group",
-            role: "group",
-            section: section
+//get request to backend
+function fetchArticle() {
+    //const API_URL = 'http://localhost:5000/article';
+    const API_URL = 'https://wikiguess.appspot.com/article';
+    const category = window.location.pathname.replace('.html', '').replace('/client/', '');
+    return fetch(API_URL, {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            category
         })
-        //outer button
-        var button = document.createElement("button");
-        button.innerText = section;
-        setAttributes(button, {
-            type: "button",
-            class: "btn btn-primary btn-lg section-button",
-            id: "sb" + i.toString(),
-            //onclick: "displaySection(this)"
-        });
+    }).then(res => res.json()).catch("Error");
+}
 
-        var subSections = Object.keys(master.blueprint[section]);
-        if (section == "content") {
-            if (Object.keys(section).length > 1) {
-                //only appends if there's more intro than the first paragraph
-                button.innerText = "intro";
-                $(button).attr("onclick", "displayManager(this)");
-                $(container).append(button);
-                $("#section-buttons").append(container);
+
+function populatePage(package) {
+    $(document).ready(function () {
+        $(".hide").removeClass("hide");
+        $("#loading").css("display", "none");
+        $("#input-container").children().each(function(){
+            if ($(this).prop('readonly') == false){
+                $(this).focus();
+                return false;
             }
-        }
+        });    
+    });
 
-        else if (subSections.length == 1) {
-            //if current section has no subsections, append button to container and add container to html
-            $(button).attr("onclick", "displayManager(this)");
-            $(container).append(button);
-            $("#section-buttons").append(container);
+    blueprint = package.blueprint;
+    title = package.title;
 
-        }
-        else if (subSections.length != 1) {
-            //if current section has more subsections, make nested button-group
-            //make section button drop-down
-            button.classList.add('dropdown-toggle');
-            $(button).attr("data-toggle", "dropdown");
-            //make div that holds subsections
-            var dropdown = document.createElement("div");
-            setAttributes(dropdown, {
-                class: "dropdown-menu",
-            });
+    createInputForm();
+    insertIntroParagraph(blueprint.content[0]);
+    insertSectionButtons(Object.keys(blueprint));
 
-            //if section has some content
-            subsectionCont = master.blueprint[section]["content"];
-            if (Object.keys(subsectionCont).length > 0){
-                var subSection = document.createElement('button');
-                subSection.innerText = "overview";
-                setAttributes(subSection, {
-                    class: "dropdown-item subsection-button",
-                    id: "ssb" + i.toString() + "0",
-                    onclick: "displayManager(this)"
-                    //section: section
-
-                })
-                $(dropdown).append(subSection);
-            }
-            for (var j = 1; j < subSections.length; j++) {
-                //make subsection button
-                var subSection = document.createElement('button');
-                subSection.innerText = subSections[j];
-                setAttributes(subSection, {
-                    class: "dropdown-item subsection-button",
-                    id: "ssb" + i.toString() + j.toString(),
-                    //bss: button subsection
-                    onclick: "displayManager(this)"
-                    //section: section
-
-                })
-                $(dropdown).append(subSection);
-            }
-
-            var subcontainer = container;
-            $(subcontainer).append(button);
-            $(subcontainer).append(dropdown);
-            $(container).append(subcontainer);
-            $("#section-buttons").append(container);
-        }
-    }
+    futureArticle = null;
+    fetchArticle().then((package) => { futureArticle = package; });
+    
 }
 
-/**
- * Loads first paragraph into page, unhidden
- * @param  {String} introString Paragraph element with all <p> tags and entire first intro paragraph
- * @param  {String} articleTitle Title of article
- */
-function insertIntroParagraph(introString, articleTitle) {
-    //firstParagraph = htmlToElement(introString).innerText;
-    firstParagraph = introString;
-    censoredFirstParagraph = titleRemover(firstParagraph, articleTitle);
-    document.getElementById("first-hint").innerHTML = censoredFirstParagraph;
-}
 
-/**
- * Not used
- * @param  {String} str The long string
- */
-function insertHiddenText(master) {
-    for (var i = 0; i < Object.keys(master.blueprint.content).length; i++) {
-        var paragraphString = master.blueprint.content[i];
-        var paragraph = htmlToElement(paragraphString).innerText;
-        var censoredParagraph = titleRemover(paragraph, master.title);
-        var censoredParagraphEle = document.createElement("p");
-        censoredParagraphEle.innerHTML = censoredParagraph;
-        if (i == 0)
-            document.getElementById("first-hint").innerHTML = censoredParagraph;
-        else {
-            setAttributes(censoredParagraphEle, {
-                class: "hidden-text second-hint",
-                onclick: "apparateText()"
-            })
-            //var parentEle = document.createElement("p");
-            //parentEle.appendChild(censoredParagraphEle);
-            document.getElementById("second-hint").appendChild(censoredParagraphEle);
-        }
-
-
-    }
-}
-
-/**
- * Replaces all instances of each word of title in str with underlines
- * @param  {String} str The long string
- * @param  {String} title The string to be tokenized, and each token removed from str
- * @return {String}     The output string with all instances all words in title replaced by underlines
- */
-function titleRemover(str, title) {
-    var titleWords = title.split(" ");
-    var paragraph = str;
-    for (var i = 0; i < titleWords.length; i++) {
-        var keyword = titleWords[i];
-        var escapedKeyword = keyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-        //initialize underscores to half the underscores in the keyword
-        var underscores = " ".repeat(Math.round(keyword.length / 2));
-        //index of word in title with underscore
-        var wordNum = i + 1;
-        underscores = "<pre><u>" + underscores + wordNum + underscores + "</u></pre>";
-        var regex = RegExp(escapedKeyword, "gi");
-        paragraph = paragraph.replace(regex, underscores);
-    }
-    return paragraph;
-}
-
-function createInputForm(title) {
-    console.log(title);
-    var container = document.getElementById("input-container");
-    flag = true;
-
-
+function createInputForm() {
+    let container = document.getElementById("input-container");
 
     for (let i = 0; i < title.length; i++) {
-        var currentChar = title.charAt(i);
-        var charField = document.createElement("input");
+        let currentChar = title.charAt(i);
+        let charField = document.createElement("input");
         charField = setAttributes(charField, {
             class: "guess-input",
             type: "text",
@@ -220,12 +73,8 @@ function createInputForm(title) {
         if (currentChar.match(/^[0-9a-zA-Z]+$/)) {
             charField = setAttributes(charField, {
                 placeholder: "_",
-                maxlength: "1"
+                maxlength: "1",
             })
-            if (flag) {
-                charField.autofocus = true;
-                flag = false;
-            }
         }
         else {
             charField.setAttribute("value", currentChar);
@@ -234,43 +83,132 @@ function createInputForm(title) {
         container.appendChild(charField);
     }
 
-    //sets font size based on title length
-    var l = title.length;
-    var fontSize;
-    switch (true) {
-        case l <= 5:
-            fontSize = "fs-6";
-            break;
-        case l > 6 && l <= 10:
-            fontSize = "fs-5";
-            break;
-        case l > 10 && l <= 15:
-            fontSize = "fs-4";
-            break;
-        case l > 15 && l <= 31:
-            fontSize = "fs-3";
-            break;
-        case l > 31:
-            fontSize = "fs-2";
-            break;
-        default:
-            break;
+    if (($('.overflow')[0].scrollWidth > $('.overflow')[0].offsetWidth)){
+        $("#responsive-gap").addClass("col-1");
     }
-    $('#input-form').addClass(fontSize);
+
+    $("#input-container").children().each(function(){
+        if ($(this).prop('readonly') == false){
+            $(this).focus();
+            return false;
+        }
+    });     
+}
+/**
+ * Loads first paragraph into page
+ * @param  {String} firstParagraph first paragraph text
+ */
+function insertIntroParagraph(firstParagraph) {
+    let censoredFirstParagraph = titleRemover(firstParagraph);
+    let introPar = document.createElement('p');
+    introPar.innerHTML = censoredFirstParagraph;
+    $("#intro").append(introPar);
+}
+
+
+function insertSectionButtons(sections) {
+    for (let i = 0; i < sections.length; i++) {
+        let section = sections[i];
+        //outer button-group
+        let container = document.createElement("div")
+        setAttributes(container, {
+            class: "btn-group",
+            role: "group",
+            section: section
+        })
+        //outer button
+        let button = document.createElement("button");
+        button.innerText = section;
+        setAttributes(button, {
+            type: "button",
+            class: "btn btn-primary btn-lg section-button",
+            id: "sb" + i.toString(),
+        });
+
+        let subsections = Object.keys(blueprint[section]);
+        if (section == "content") {
+            if (Object.keys(blueprint[section]).length > 1) {
+                //only appends if there's more intro than the first paragraph
+                button.innerText = "intro";
+                $(button).attr("onclick", "displayManager(this)");
+                $(container).append(button);
+                $("#toc-buttons").append(container);
+            }
+        }
+
+        else if (subsections.length == 1) {
+            //if current section has no subsections, append button to container and add container to html
+            $(button).attr("onclick", "displayManager(this)");
+            $(container).append(button);
+            $("#toc-buttons").append(container);
+
+        }
+        else if (subsections.length > 1) {
+            //if current section has subsections, make nested button-group
+            //make section button drop-down
+            button.classList.add('dropdown-toggle');
+            $(button).attr("data-toggle", "dropdown");
+            //make div that holds subsections
+            let dropdown = document.createElement("div");
+            dropdown.setAttribute("class", "dropdown-menu");
+
+            //if section has some content (overview)
+            subsectionContent = blueprint[section]["content"];
+            if (Object.keys(subsectionContent).length > 0) {
+                let overviewSubsection = document.createElement('button');
+                overviewSubsection.innerText = "overview";
+                setAttributes(overviewSubsection, {
+                    class: "dropdown-item subsection-button",
+                    id: "ssb" + i.toString() + "0",
+                    onclick: "displayManager(this)"
+                })
+                $(dropdown).append(overviewSubsection);
+            }
+            for (let j = 1; j < subsections.length; j++) {
+                //make subsection button
+                let subsection = document.createElement('button');
+                subsection.innerText = subsections[j];
+                setAttributes(subsection, {
+                    class: "dropdown-item subsection-button",
+                    id: "ssb" + i.toString() + j.toString(),
+                    onclick: "displayManager(this)"
+
+                })
+                $(dropdown).append(subsection);
+            }
+
+            $(container).append(button);
+            $(container).append(dropdown);
+            $("#toc-buttons").append(container);
+        }
+    }
+}
+
+
+/**
+ * Replaces all instances of titlewords in paragraph with underlines
+ * @param  {String} paragraph The long string
+ * @return {String}     The output string with all instances of titlewords replaced by underlines
+ */
+function titleRemover(paragraph) {
+    let titleWords = title.replace(/[\\(\\)\\.\,]/ig, '').split(" ");
+    for (let i = 0; i < titleWords.length; i++) {
+        let titleWord = titleWords[i];
+        let escapedTitleWord = titleWord.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        let spaces = " ".repeat(Math.round(titleWord.length / 2));
+        //index of word in title 
+        let wordNum = i + 1;
+        spaces = "<pre><u>" + spaces + wordNum + spaces + "</u></pre>";
+        let regex = RegExp(escapedTitleWord, "gi");
+        paragraph = paragraph.replace(regex, spaces);
+    }
+    return paragraph;
 }
 
 function setAttributes(el, attrs) {
-    for (var key in attrs) {
+    for (let key in attrs) {
         el.setAttribute(key, attrs[key]);
     }
     return el;
 }
-
-function htmlToElement(html) {
-    var template = document.createElement('template');
-    html = html.trim(); // Never return a text node of whitespace as the result
-    template.innerHTML = html;
-    return template.content.firstChild;
-}
-
 

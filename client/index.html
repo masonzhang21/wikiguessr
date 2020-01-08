@@ -10,17 +10,18 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <!--Custom CSS-->
+    <link rel="stylesheet" href="home.css">
     <link rel="stylesheet" href="styles.css">
     <!-- <link rel="stylesheet" href="wikipedia.css">
     <link rel="stylesheet" href="https://en.wikipedia.org/w/load.php?lang=en&modules=site.styles&only=styles&skin=vector"> -->
 
-    <title>WikiGuess</title>
+    <title>WikiGuessr</title>
 </head>
 
 <body>
     <!--Navbar-->
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">WikiGuess</a>
+        <a class="navbar-brand" href="#">WikiGuessr</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -28,76 +29,73 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                 <a class="nav-item nav-link active mr-2" href="index.html"><!--Home--> <span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link mr-2" href="#"><!--Categories--></a>
-                <a class="nav-item nav-link mr-2" href="#"><!--Challenge--></a>
-                <a class="nav-item nav-link mr-2" href="#"><!--Login--></a>
             </div>
         </div>
     </nav>
 
     <!--container class-->
     <div class="mt-5 top-margin">
-        <h1 class="title center mx-4">WikiGuess</h1>
+        <h1 class="title center mx-5">WikiGuessr</h1>
         <!--TO-DO: Make this _ _ _  and fill in WikiGuess. Mirror format of game closely and animate.-->
         <!--Left-side text-->
         <div class="row">
-            <div class="col-lg mt-3 mx-4 center">
-                <h2 class="subtitle">This is a game for the trivially-inclined</h2>
-                <p class="mt-5">They say there's a Wikipedia article on every topic imaginable. How many do you
-                    think you know? Pick a category (or random, if you're particularly daring), and try your best 
-                    to figure out the article title based on its content. Guess away! And
-                    do try to learn something new today.
+            <div class="col-lg mt-3 mx-5 center">
+                <h2 class="subtitle">A game for the trivially-inclined</h2>
+                <p class="mt-5">They say there's a Wikipedia article on every topic imaginable. How many do you think you know? 
+                    Pick a category (or random, if you're particularly daring), and try your best 
+                    to figure out the article title based on its content. You start with part of the intro,
+                     and you can unlock three additional sections of your choosing in the table of contents. Use your hints wisely.
+                     Guess away! And try to learn something new today!
                 </p>
                 <a class="btn btn-primary btn-xl mt-3" href="random.html" role="button">Random</a>
             </div>
             <!--Categories column-->
-            <div class="col-lg responsive-category">
-                <h2 class="text-center mb-4 categories">Categories</h2>
+            <div class="col-lg" id="categories">
+                <h2 class="text-center mb-4 f40">Categories</h2>
                 <div class="row justify-content-center mt-3">
-                    <div class="col-4">
-                        <a class="btn btn-primary btn-xl" href="#" role="button">Top 1000</a>
+                    <div class="col-5">
+                        <a class="btn btn-primary btn-xl" href="top1000.html" role="button">Top 1000</a>
                     </div>
-                    <div class="col-4">
+                    <div class="col-5">
+                        <a class="btn btn-primary btn-xl" href="fortune500.html" role="button">Fortune 500</a>
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-5">
+                        <a class="btn btn-primary btn-xl" href="art.html" role="button">Art</a>
+                    </div>
+                    <div class="col-5">
+                        <a class="btn btn-primary btn-xl" href="books.html" role="button">Books</a>
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-5">
                         <a class="btn btn-primary btn-xl" href="countries.html" role="button">Countries</a>
                     </div>
-                </div>
-                <div class="row justify-content-center mt-3">
-                    <div class="col-4">
-                        <a class="btn btn-primary btn-xl" href="#" role="button">Sports</a>
-                    </div>
-                    <div class="col-4">
-                        <a class="btn btn-primary btn-xl" href="#" role="button">Government</a>
+                    <div class="col-5">
+                        <a class="btn btn-primary btn-xl" href="elements.html" role="button">Elements</a>
                     </div>
                 </div>
                 <div class="row justify-content-center mt-3">
-                    <div class="col-4">
-                        <a class="btn btn-primary btn-xl" href="#" role="button">Art</a>
+                    <div class="col-5">
+                        <a class="btn btn-primary btn-xl" href="food.html" role="button">Food</a>
                     </div>
-                    <div class="col-4">
-                        <a class="btn btn-primary btn-xl" href="#" role="button">Scientists</a>
-                    </div>
-                </div>
-                <div class="row justify-content-center mt-3">
-                    <div class="col-4">
-                        <a class="btn btn-primary btn-xl" href="#" role="button">Fortune 500</a>
-                    </div>
-                    <div class="col-4">
-                        <a class="btn btn-primary btn-xl" href="#" role="button">Coming soon</a>
+                    <div class="col-5">
+                        <a class="btn btn-primary btn-xl" href="people.html" role="button">People</a>
                     </div>
                 </div>
                 <div class="row justify-content-center mt-3">
-                    <div class="col-4">
-                        <a class="btn btn-primary btn-xl" href="#" role="button">Coming soon</a>
+                    <div class="col-5">
+                        <a class="btn btn-primary btn-xl" href="shakespeare.html" role="button">Shakespeare</a>
                     </div>
-                    <div class="col-4">
-                        <a class="btn btn-primary btn-xl" href="#" role="button">Coming soon</a>
+                    <div class="col-5">
+                        <a class="btn btn-primary btn-xl" href="sports.html" role="button">Sports</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    
     <!--Optional JavaScript: jQuery first, then Popper.js, then Bootstrap JS-->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -108,6 +106,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    
+    <script src="primer.js"></script>
+
 </body>
 
 </html>
