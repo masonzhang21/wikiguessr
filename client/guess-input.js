@@ -44,15 +44,16 @@ $("#toc").on("click", function(){
     });    
 })
 
+/*
+do something if input form has scrollbar
 $(window).on("resize", function(){
     if (($('.overflow')[0].scrollWidth > $('.overflow')[0].offsetWidth)){
-        $("#responsive-gap").addClass("col-1");
     }
     if (($('.overflow')[0].scrollWidth <= $('.overflow')[0].offsetWidth)){
-        $("#responsive-gap").removeClass("col-1");
     }
 
 })
+*/
 
 
 

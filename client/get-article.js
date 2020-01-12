@@ -3,9 +3,11 @@ let title;
 let futureArticle;
 
 (function () {
+    fetchArticle().then(package => populatePage(package));
+
     let ellipses = setInterval(function () {
         let text = $('#dots').text();
-        if ($("#loading").css("display") == "none")
+        if ($("#loading").hasClass("disappear"))
             clearInterval(ellipses);
         else if (text.length < 3) 
             $('#dots').text(text + ".");
@@ -13,14 +15,13 @@ let futureArticle;
             $('#dots').text("");
     }, 200);
 
-    fetchArticle().then(package => populatePage(package));
 })();
 
 //get request to backend
 function fetchArticle() {
     //const API_URL = 'http://localhost:5000/article';
     const API_URL = 'https://wikiguess.appspot.com/article';
-    const category = window.location.pathname.replace('.html', '').replace('/client/', '');
+    const category = window.location.pathname.replace(/.html|\/client\/|\//g, '').replace('/client/', '').replace('/', '');
     return fetch(API_URL, {
         method: 'POST',
         headers: {
@@ -35,8 +36,9 @@ function fetchArticle() {
 
 function populatePage(package) {
     $(document).ready(function () {
-        $(".hide").removeClass("hide");
-        $("#loading").css("display", "none");
+        $("#toc, #top-container").removeClass("hide");
+        //$(".disappear").removeClass("disappear");
+        $("#loading").addClass("disappear");
         $("#input-container").children().each(function(){
             if ($(this).prop('readonly') == false){
                 $(this).focus();
@@ -70,7 +72,7 @@ function createInputForm() {
             size: "1"
         });
 
-        if (currentChar.match(/^[0-9a-zA-Z]+$/)) {
+        if (currentChar.match(/^[a-zA-Z]+$/)) {
             charField = setAttributes(charField, {
                 placeholder: "_",
                 maxlength: "1",
@@ -191,7 +193,8 @@ function insertSectionButtons(sections) {
  * @return {String}     The output string with all instances of titlewords replaced by underlines
  */
 function titleRemover(paragraph) {
-    let titleWords = title.replace(/[\\(\\)\\.\,]/ig, '').split(" ");
+    let titleWords = title.replace(/[^A-Za-z\s]/ig, '').split(" ").filter(x => x != "");
+    console.log(titleWords)
     for (let i = 0; i < titleWords.length; i++) {
         let titleWord = titleWords[i];
         let escapedTitleWord = titleWord.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');

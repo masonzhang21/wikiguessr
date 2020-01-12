@@ -1,6 +1,9 @@
 
 .hide{
-    visibility: hidden
+    visibility: hidden;
+}
+.disappear{
+    display: none;
 }
 .fs12{
     font-size: 12px;
@@ -16,14 +19,14 @@
 html, body{
     color: black;
     background-color: whitesmoke;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     overflow-x: hidden;
 }
 
 pre {
     display: inline;
     margin: 0; 
-    font-family: 'Courier New', Courier, monospace;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 table, th, td{
     text-align: center;
@@ -38,44 +41,45 @@ table, th, td{
     position: absolute;
     font-size: 2em;
     bottom: 0;
+    font-family: 'Courier Prime', monospace;
 }
 #top-container{
     white-space: nowrap;
-    height: 8.5vh;
+    height: 70px;
 }
 #match{
     font-size: 3em;
     text-align: center;
     visibility: hidden;
     display: flex;
-    align-items: flex-end;
+    justify-content: center;
+    align-items: center;
 }
 #input-button{
-    border: 0;
-    background-color: whitesmoke;
-    outline: 0;
     margin-left: 5px;
 }
 #next-article{
-    padding: 0;
     display: flex;
-    margin-top: 10px;
+    justify-content: center;
     align-items: center;
+    position: absolute;
+    right: 30px;
 }
 #hint-box{
+    margin-top: 10px;
     width: 1.8em;
     height: 1.8em;
     font-size: 1.8em;
     background: whitesmoke
 }
 #next-button{
-    border: 2px solid black;
-    font-size: 0.9em;
+    font-size: 3em;
     display: none;
 }
 #guess-line{
     border-top: 1px solid black;
     margin: 0 0 0 -30px;
+    position: relative;
 }
 .guess-input{
     background-color: whitesmoke;
@@ -90,11 +94,16 @@ input:focus{
 }
 .incorrect{
     color: red;
-    font-family: Verdana, Geneva, Tahoma, sans-serif ;
+    font-family: 'Nunito', sans-serif;
     font-weight: bold;
 }
 .container{
     max-width: 100%;
+}
+.borderless{
+    border: 0;
+    background-color: whitesmoke;
+    outline: 0;
 }
 
 
@@ -108,8 +117,9 @@ input:focus{
 }
 .section-button{
     padding: 12px 24px;
-    font-size: 20px;
+    font-size: 18px;
     margin: 10px 2px 10px 10px;
+
 }
 .clicked{
     background: #636363;
@@ -163,7 +173,7 @@ h4{
 
 
 
-@media (max-width:500px){
+@media (max-width:400px){
     /*adjusts top bar*/
     #match{
         display: none;

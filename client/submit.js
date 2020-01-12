@@ -5,13 +5,10 @@ function nextArticle() {
     numHints = 3;
 
     $('#input-button').prop('disabled', false);
-    $('#match').removeClass("incorrect correct");
-    $('#match').css('visibility', 'hidden');
-    $('#match').text("");
-    $('#next-button').css("display", "none");
-    $('#hint-box').text("3")
-    $("#hint-box").attr("count", "3")
-
+    $('#match').removeClass("incorrect correct").removeAttr("style").addClass('hide').text("");
+    $('#next-button').removeAttr("style").addClass("disappear");
+    $('#loading').removeClass("disappear");
+    $('#hint-box').text("3").attr("count", "3").removeClass("disappear");
     $("#input-container").empty();
     $("#intro").empty();
     $("#toc-buttons").empty();
@@ -22,10 +19,10 @@ function nextArticle() {
     }
     else {
         $("#toc").addClass("hide");
-        $("#loading").css("display", "initial");
+        $("#loading").removeAttr("disappear");
         let ellipses = setInterval(function () {
             let text = $('#dots').text();
-            if ($("#loading").css("display") == "none"){
+            if ($("#loading").hasClass("disappear")){
                 clearInterval(ellipses);
             }
             else if (text.length < 3) {
@@ -41,7 +38,6 @@ function nextArticle() {
 }
 
 
-
 form.onsubmit = function (event) {
     event.preventDefault();
 
@@ -53,8 +49,8 @@ form.onsubmit = function (event) {
 
     gamestateGuess = false;
     $('#input-button').prop('disabled', true);
-    $('#match').css('visibility', 'visible').hide().fadeIn(1000);
-    $('#hint-box').addClass("hide");
+    $('#match').removeClass("hide").css('visibility', 'visible').hide().fadeIn(1000);
+    $('#hint-box').addClass("disappear");
     $('#input-button').addClass("hide");
     $('#next-button').fadeIn(800);
 
@@ -79,16 +75,16 @@ function getGuess() {
 }
 
 function correctGuess() {
-    $("#match").text("✔");
+    $("#match").html("&#10004;");
     $("#match").addClass("correct");
-    $('#next-button').css('border', 'green 4px solid')
+    $('#next-button').css('color', 'green')
     $('.guess-input').prop('readonly', true)
 }
 
 function incorrectGuess() {
     $("#match").text("X");
     $("#match").addClass("incorrect");
-    $('#next-button').css('border', 'red 4px solid')
+    $('#next-button').css('color', 'red')
 
     $('.guess-input').each(function (index) {
         if ($(this).val().toLowerCase() != title.toLowerCase().charAt(index)) {
@@ -149,13 +145,15 @@ function loadFullArticle() {
 
 function titleInserter(container) {
     paragraphList = $(container).children('p');
-    let titleWords = title.replace(/[\\(\\)\\.\,]/ig, '').split(" ");
+    let titleWords = title.replace(/[^A-Za-z\s]/ig, '').split(" ").filter(x => x != "");
+    console.log(titleWords)
 
     for (ele of paragraphList) {
         let placeholders = $(ele).children('pre');
         for (placeholder of placeholders) {
             let censoredWord = placeholder.innerText;
-            $(placeholder).replaceWith(titleWords[parseInt(censoredWord) - 1]);
+            let actualWord = titleWords[parseInt(censoredWord) - 1];
+            $(placeholder).replaceWith(actualWord);
         }
     }
 }

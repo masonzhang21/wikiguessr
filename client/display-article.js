@@ -137,7 +137,7 @@ function displaySubsection(button) {
     $("#sb" + sectionLoc).addClass("clicked");
     let subsectionButtonDiv = button.parentElement;
     if ($(subsectionButtonDiv).has('button[onclick="displayManager(this)"]').length == 0) {
-        $(sectionButton).addClass("clicked");
+        $(sectionButton).parent().children().first().addClass("clicked");
         $(subsectionButtonDiv).addClass("clicked");
     }
 }

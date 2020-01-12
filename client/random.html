@@ -2,15 +2,14 @@
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap CSS -->
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <!-- Custom CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <title>WikiGuess</title>
+    <title>WikiGuessr</title>
 </head>
 
 <body>
@@ -23,7 +22,7 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link active mr-2" href="index.html">Home <span backan class="sr-only">
+                <a class="nav-item nav-link active mr-2" href="/index.html">Home <span backan class="sr-only">
                         (current)</span></a>
             </div>
         </div>
@@ -33,21 +32,25 @@
     <div class="mx-5 container">
         <div class="row hide" id="top-container">
             <div class="col-1" id="match"></div>
-            <div class="col-9 overflow">
-                <form id="input-form">
-                    <span id="input-container"></span>
-                    <button type="submit" form="input-form" id="input-button">&crarr;</button>
-                </form>
+            <div class="row col-9">
+                <div class="col-11 overflow">
+                    <form id="input-form">
+                        <span id="input-container"></span>
+                        <button type="submit" form="input-form" id="input-button" class="borderless">&crarr; </button>
+                    </form>
+                </div>
             </div>
-            <div id="responsive-gap"></div>
+            <div class="col-1"></div>
             <div class="col-1" id="next-article">
                 <button type="submit" id="hint-box" count="3"> 3 </button>
-                <button type="submit" id="next-button" onclick="nextArticle()"> next <br> (enter) </button>
+                <button type="submit" id="next-button" class="borderless" onclick="nextArticle()"> &crarr; </button>
             </div>
+
         </div>
     </div>
     <hr class="mx-5" id="guess-line" />
     <p class="mt-3 mx-5 fs12">From Wikipedia, the free encyclopedia </p>
+
 
     <p class="mt-5 mx-5" id="loading">Loading <span id="dots"></span></p>
 

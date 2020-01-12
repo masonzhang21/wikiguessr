@@ -24,11 +24,11 @@ app.post('/article', async function (req, res) {
     else
         articleTitle = await articleChooser(category);
     let article = getArticle(articleTitle);
-    article.then(r => res.json(r));
+    article.then(r => res.json(r)).catch(console.log(error));
 });
 
 app.listen(PORT, function () {
-    console.log('Listening to ${PORT}');
+    console.log(`Listening to ${PORT}`);
 });
 
 function articleChooser(category) {
@@ -67,21 +67,27 @@ function getRandomArticleTitle() {
 
 async function getArticle(articleTitle) {
     let API_URL = 'https://www.wikipedia.org/w/api.php?action=parse&page=' + encodeURIComponent(articleTitle) + '&format=json';
-    let article = fetch(API_URL, {
+    let output = await fetch(API_URL, {
         method: 'GET',
         headers: {
             'content-type': 'application/json'
         }
-    }).then(res => res.json())
-        .then(function (res) {
-            let html = res.parse.text["\*"];
-            let blueprint = createArticleBlueprint(html);
-            return {
-                title: articleTitle.replace(/_/g, " "),
-                blueprint: blueprint
-            }
-        }).catch(console.log(error));
-    return article;
+    }).then(res => res.json()).catch(console.log(error));
+
+    let html = output.parse.text["\*"];
+    //stupid if statement to account for bad links (redirects) that can be removed when the database is formatted properly
+    if (html.includes("\"redirectText\"")) {
+        betterTitle = html.match(/(?<="\/wiki\/)(.*?)(?=")/)[0];
+        return getArticle(betterTitle);
+    }
+    else {
+        let blueprint = createArticleBlueprint(html);
+        let package = {
+            title: articleTitle.replace(/_/g, " "),
+            blueprint: blueprint
+        };
+        return package;
+    }
 }
 
 /* BLUEPRINT FORMAT:
