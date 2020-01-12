@@ -18,4 +18,4 @@ The static website is hosted with Google Cloud Bucket, the backend server with G
 
 # Bugs
 
-Sadly I feel like there might be a couple of these. If you find one, let me know at mason_zhang@brown.edu!
+Sadly there might be a couple of these. If you find one, let me know at mason_zhang@brown.edu!
