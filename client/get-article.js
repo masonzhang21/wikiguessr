@@ -195,6 +195,7 @@ function insertSectionButtons(sections) {
 function titleRemover(paragraph) {
     let titleWords = title.replace(/[^A-Za-z\s]/ig, '').split(" ").filter(x => x != "");
     console.log(titleWords)
+    //console.log(titleWords)
     for (let i = 0; i < titleWords.length; i++) {
         let titleWord = titleWords[i];
         let escapedTitleWord = titleWord.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');

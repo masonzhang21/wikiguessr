@@ -72,6 +72,7 @@ function getGuess() {
         }
     }
     return guess;
+
 }
 
 function correctGuess() {
