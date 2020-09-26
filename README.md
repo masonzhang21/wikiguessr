@@ -1,5 +1,6 @@
 # wikiguessr
 Play at www.wikiguessr.com!
+
 A Wikipedia-based trivia game: try to guess words based on their Wikipedia article. Makes use of the MediaWiki API with a Node.js backend for retrieving random articles.
 
 # How To Play
