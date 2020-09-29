@@ -6,7 +6,7 @@
   <a href="#technologies">Technologies</a> •
   <a href="#how-to-play">How to Play</a> •
   <a href="#key-features">Key Features</a> •
-  <a href="#project-design-and-organization">Project Design and Organization</a> •
+  <a href="#project-design-and-organization">Project Design and Organization</a> 
 </p>
 
 <p align="center">A Wikipedia-based trivia game: try to guess words based on their Wikipedia article. </p>
