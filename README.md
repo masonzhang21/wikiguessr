@@ -26,7 +26,7 @@ Each round, you start with the first paragraph of the intro section. You get thr
 
 Type your guess in the top bar. All non-alphabetical characters are given to you, and the guess checker isn't case sensitive. Whether your answer is right or wrong, the full Wikipedia article will load, in case you want to read more about whatever intriguing subject you were on. 
 
-Bewarned: the preset categories are mostly safe, but if you're playing on random, certain articles can cause Wikiguessr to freeze. If an article is loading for more than 10s, give the page a quick refresh.  
+Be warned: the preset categories are mostly safe, but if you're playing on random, certain articles can cause Wikiguessr to freeze. If an article is loading for more than 10s, give the page a quick refresh.  
 
 ## Key Features
 - Selects articles randomly
