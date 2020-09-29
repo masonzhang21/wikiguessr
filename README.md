@@ -1,4 +1,4 @@
-<p align="center"><img src="./wikiguessr-logo.jpg" width=1000px/></p>
+<p align="center"><img src="./wikiguessr-logo.jpg" width=800px/></p>
 
 <h1 align="center">Wikiguessr</h1>
 
@@ -10,14 +10,15 @@
   <a href="#pending-features">Pending Features</a>
 </p>
 
-<p align="center">A Chrome extension designed to limit screen time on distracting sites by slowly fading them away as you spend time on them. It's highly customizable and also keeps track of your screen time.</p>
-
-<p align="center"><img src="./assets/fadingsite.jpg"  width=1000px/></p>
-<p align="center"> Get the extension <a href="https://chrome.google.com/webstore/detail/time-warden/hgfgbklancihgfpjaagdmhplaoklgeol?hl=en">here</a> on the Chrome Web Store! </p>
+<p align="center">A Wikipedia-based trivia game: try to guess words based on their Wikipedia article. </p>
+<p align="center"> Play the game<a href="https://wikiguessr.com">here</a>! </p>
+<p align="center"> This was my first CS project, and the code/organization is horrendous. Please don't judge too hard! </p>
 
 ## Technologies
-- React
+- HTML
+- CSS
 - Javascript
+- JQuery
 
 ## Key Features
 - Group sites into buckets and customize how long it takes for sites in a bucket to fade away/regenerate
