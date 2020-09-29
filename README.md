@@ -1,4 +1,4 @@
-<p align="center"><img src="./assets/wikiguessr-logo.jpg" width=700px/></p>
+<p align="center"><img src="./wikiguessr-logo.jpg" width=700px/></p>
 
 <h1 align="center">Time Warden</h1>
 
