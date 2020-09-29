@@ -1,6 +1,6 @@
-<p align="center"><img src="./wikiguessr-logo.jpg" width=700px/></p>
+<p align="center"><img src="./wikiguessr-logo.jpg" width=1000px/></p>
 
-<h1 align="center">Time Warden</h1>
+<h1 align="center">Wikiguessr</h1>
 
 <p align="center">
   <a href="#technologies">Technologies</a> •
