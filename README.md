@@ -11,7 +11,7 @@
 
 <p align="center">A Wikipedia-based trivia game: try to guess words based on their Wikipedia article. </p>
 <p align="center"> Play the game <a href="https://wikiguessr.masonzee.com">here</a>! </p>
-<p align="center"> This was my first CS project, and the code/organization is horrendous. Please don't judge too hard! </p>
+<p align="center"> This was my first CS project. Please don't judge too hard! </p>
 
 ## Technologies
 - HTML
